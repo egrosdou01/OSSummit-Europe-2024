@@ -1,0 +1,39 @@
+---
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: kyverno-test-policies
+spec:
+  clusterSelector:
+    matchLabels:
+      env: test
+  syncMode: Continuous
+  helmCharts:
+    - repositoryURL: https://kyverno.github.io/kyverno/
+      repositoryName: kyverno
+      chartName: kyverno/kyverno
+      chartVersion: v3.2.5
+      releaseName: kyverno-latest
+      releaseNamespace: kyverno
+      helmChartAction: Install
+  validateHealths:
+    - name: deployment-health
+      featureID: Helm
+      group: "apps"
+      version: "v1"
+      kind: "Deployment"
+      namespace: kyverno
+      script: |
+        function evaluate()
+          local hs = {healthy = false, message = "Available replicas not match requested replicas"}
+          if obj.status and obj.status.availableReplicas ~= nil and obj.status.availableReplicas == obj.spec.replicas then
+            hs.healthy = true
+          end
+          return hs
+        end
+  policyRefs:
+    - kind: GitRepository
+      name: flux-system
+      namespace: flux-system
+      path: kyverno-policies/test
+      deploymentType: Remote

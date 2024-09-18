@@ -1,0 +1,36 @@
+---
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: cilium-1156
+spec:
+  clusterSelector:
+    matchLabels:
+      env: test
+  syncMode: Continuous
+  helmCharts:
+  - chartName: cilium/cilium
+    chartVersion: 1.15.6
+    helmChartAction: Install
+    releaseName: cilium
+    releaseNamespace: kube-system
+    repositoryName: cilium
+    repositoryURL: https://helm.cilium.io/
+    values: |
+      hubble:
+        enabled: true
+        peerService:
+          clusterDomain: cluster.local
+        relay:
+          enabled: true
+        tls:
+          auto:
+            certValidityDuration: 1095
+            enabled: true
+            method: helm
+        ui:
+          enabled: true
+      nodePort:
+        enabled: true
+      debug:
+        enabled: true
