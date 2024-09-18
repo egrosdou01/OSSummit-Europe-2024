@@ -70,7 +70,7 @@ $ kubectl get ds/cilium -n kube-system -o jsonpath='{.spec.template.spec.contain
 
 ### Management Cluster - Deploy Kyverno and Cluster Policies
 
-**Note**: For a full deployment with Sveltos and Flux, have a look [here](https://medium.com/@eleni.grosdouli/5-step-approach-projectsveltos-integration-with-flux-5e68fb584a3c).
+**Note**: For a full deployment of Sveltos and Flux, have a look [here](https://medium.com/@eleni.grosdouli/5-step-approach-projectsveltos-integration-with-flux-5e68fb584a3c).
 
 ```bash
 $ kubectl apply -f resources/test_cluster/clusterprofile_kyverno.yaml
