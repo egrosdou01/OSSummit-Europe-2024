@@ -1,99 +1,47 @@
-# OSSummit Europe 2024
+# OSSummit Europe Resources
 
-## Introduction
-The repository is dedicated to the [OSSummit Europe](https://events.linuxfoundation.org/open-source-summit-europe/) conference presentation of [Sveltos](https://github.com/projectsveltos).
+Welcome to the repository containing all the resources presented during the **OSSummit Europe** conferences! The repo includes the materials, code, configurations, and examples shared throughout the demos, which focuses on various open-source and cloud-native technologies.
 
-## How to
+## Table of Contents
 
-### Assumptions
-- We assume a Kubernetes management cluster is already in place with **Sveltos** installed. Sveltos installation details can be found [here](https://projectsveltos.github.io/sveltos/getting_started/install/install/).
-- We assume the Kubernetes managed clusters are in place with **no CNI** in place
-- We assume [Flux](https://fluxcd.io/flux/installation/) is installed in the management cluster and synced to a repository that holds the Kyverno YAML manifest files
+- [Overview](#overview)
+- [Event Topics](#event-topics)
+- [Resources Included](#resources-included)
+- [Setup Instructions](#setup-instructions)
 
-### Prerequisites
-- Install `kubectl` and `sveltosctl`
-- Obtain the `kubeconfig` of the clusters
+## Overview
 
-**Note**: Download the `sveltosctl` [here](https://github.com/projectsveltos/sveltosctl/releases).
+> Open Source Summit is the premier event for open source developers technologists, and community leaders to collaborate, share information, solve problems, and gain knowledge, furthering open source innovation and ensuring a sustainable open source ecosystem. It is the gathering place for open-source code and community contributors. 🌐🚀
 
-### Management Cluster - Create Required Namespaces
-```bash
-$ kubectl apply -f resources/namespaces/ns_test.yaml,resources/namespaces/ns_prod.yaml
-```
+For more information, visit the official [website](https://events.linuxfoundation.org/open-source-summit-europe/) of the event.
 
-### Management Cluster - Register Clusters with Sveltos
+At the conference, we aim to share **exciting updates** about the [Sveltos Kubernetes Add-on Controller](https://github.com/projectsveltos), which includes information on both past and upcoming events. We demonstrate how to deploy **add-on**s and **applications** in **hybrid-multicloud** environments. The interactive sessions and the live demos, allow attendees to get hands-on experience with the open-source tools and see how they bring a fresh, modern approach to GitOps. 🖥️☁️
 
-```bash
-$ ./sveltosctl register cluster \
---namespace=test --cluster=test01 \
---kubeconfig=/path/to/kubeconfig --labels=env=test # Register the managed cluster with Sveltos. We use the sveltosctl for simplicity
+## Event Topics
 
-$ ./sveltosctl register cluster \
---namespace=prod --cluster=prod01 \
---kubeconfig=/path/to/kubeconfig --labels=env=prod # Register the managed cluster with Sveltos. We use the sveltosctl for simplicity
-```
+During the event, we covered a variety of topics, including but not limited to:
 
-### Validate Registration
+- **Kubernetes Add-ons and Application Deployment**: Simplifying Kubernetes add-on and application deployment using Sveltos
+- **Open-Source Tooling for Deployment**: Leveraging open-source tools for advanced automation
+- **GitOps**: Automating deployments and updates using the GitOps principles
+- **Scaling**: Techniques for scaling environments, clusters, and applications seamlessly in a hybrid-multicloud environment
 
-```bash
-$ kubectl get sveltosclusters -A --show-labels # Once Sveltos is installed in the management cluster, we can get the `sveltosclusters` resources
-```
+## Resources Included
 
-### Management Cluster - Deploy Cilium
+Within the **resources** folder, different OSSummit Europe events are located. Each event has its own folder. The below are included.
 
-```bash
-$ kubectl apply -f resources/test_cluster/clusterprofile_cilium.yaml,resources/prod_cluster/clusterprofile_cilium.yaml
-```
+- **Code**: The example configurations used during the event
+- **Documentation**: Detailed guide, step-by-step instructions, and context for each session
 
-### Validate Deployment
+Each folder includes a **README.md** file with additional instructions and context.
 
-**Management Cluster**
+## Setup Instructions
 
-```bash
-$ ./sveltosctl show addons --namespace=test # Check Sveltos Deployments `test` namespace
-$ ./sveltosctl show addons --namespace=prod # Check Sveltos Deployments `prod` namespace
-```
+To get started with the resources, follow these steps:
 
-**Managed Clusters**
+1. **Clone the Repository**:
 
-```bash
-$ export KUBECONFIG=/path/to/test-kubeconfig
-$ kubectl get pods -n kube-system -w | grep -E 'cilium|hubble'
-$ kubectl get ds/cilium -n kube-system -o jsonpath='{.spec.template.spec.containers[0].image}'
-```
-
-```bash
-$ export KUBECONFIG=/path/to/prod-kubeconfig
-$ kubectl get pods -n kube-system -w | grep -E 'cilium|hubble'
-$ kubectl get ds/cilium -n kube-system -o jsonpath='{.spec.template.spec.containers[0].image}'
-```
-
-### Management Cluster - Deploy Kyverno and Cluster Policies
-
-**Note**: For a full deployment of Sveltos and Flux, have a look [here](https://medium.com/@eleni.grosdouli/5-step-approach-projectsveltos-integration-with-flux-5e68fb584a3c).
-
-```bash
-$ kubectl apply -f resources/test_cluster/clusterprofile_kyverno.yaml
-$ kubectl apply -f resources/prod_cluster/clusterprofile_kyverno.yaml
-```
-
-### Validate Deployment
-
-```bash
-$ ./sveltosctl show addons --namespace=test # Check the Sveltos Deployments `test` namespace
-$ ./sveltosctl show addons --namespace=prod # Check the Sveltos Deployments `prod` namespace
-```
-
-**Note**: Feel free to update the Helm chart versions mentioned in the manifest files.
-
-### Managed Cluster - Validate Kyverno Policies
-
-```bash
-$ export KUBECONFIG=/path/to/test-kubeconfig
-$ kubectl get ClusterPolicy -A
-```
-
-```bash
-$ export KUBECONFIG=/path/to/prod-kubeconfig
-$ kubectl get ClusterPolicy -A
-```
+   ```bash
+   git clone https://github.com/egrosdou01/civo-navigate-2024
+   cd resources
+   ```
